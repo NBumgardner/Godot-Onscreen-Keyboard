@@ -200,7 +200,7 @@ func _hideKeyboard(keyData=null,x=null,y=null):
 					_hide_keyboard()
 
 
-func _hide_keyboard(key_data=null):
+func _hide_keyboard(key_data=null, x=null, y=null):
 	if animate:
 		var new_y_pos = get_viewport().get_visible_rect().size.y + 10
 		animate_position(Vector2(position.x, new_y_pos), true)
@@ -208,7 +208,7 @@ func _hide_keyboard(key_data=null):
 		change_visibility(false)
 
 
-func _show_keyboard(key_data=null):
+func _show_keyboard(key_data=null, x=null, y=null):
 	change_visibility(true)
 	if animate:
 		var new_y_pos = get_viewport().get_visible_rect().size.y - size.y
