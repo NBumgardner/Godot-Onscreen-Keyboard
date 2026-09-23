@@ -28,6 +28,8 @@ func set_pressing(_pressing):
 func _enter_tree():
 	pass
 
+func _ready():
+	pass # Replace with function body.
 
 func _draw():
 	var style = get_stylebox("normal")
