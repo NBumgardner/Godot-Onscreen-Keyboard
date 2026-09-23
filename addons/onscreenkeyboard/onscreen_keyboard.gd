@@ -1,14 +1,11 @@
 @tool
 extends PanelContainer
 
-<<<<<<< HEAD
 enum Direction {
 	UP,
 	DOWN
 }
 
-=======
->>>>>>> main
 ###########################
 ## SETTINGS
 ###########################
@@ -77,18 +74,11 @@ func _enter_tree():
 		get_tree().get_root().size_changed.connect(size_changed)
 	_init_keyboard()
 
-<<<<<<< HEAD
-=======
-#func _exit_tree():
-#    pass
-
->>>>>>> main
 #func _process(delta):
 #    pass
 
 func _input(event):
-<<<<<<< HEAD
-	_updateAutoDisplayOnInput(event)
+	_update_auto_display_on_input(event)
 	if keyboardVisible:
 		if not sendingEvent:
 			if event is InputEventKey or event is InputEventJoypadButton or event is InputEventJoypadMotion:
@@ -96,10 +86,6 @@ func _input(event):
 				_handleKeyEvents(event)
 		elif event is InputEventKey and event.scancode == KEY_ENTER and isKeyboardFocusObject(focusObject):
 			_hideKeyboard()
-=======
-	_update_auto_display_on_input(event)
-
->>>>>>> main
 
 func size_changed():
 	if auto_show and visible:
@@ -113,26 +99,18 @@ var KeyListHandler
 
 var layouts = []
 var keys = []
-<<<<<<< HEAD
-var layoutKeys = {}
-var focusKeys = null
-var capslockKeys = []
-var uppercase = false
-
-var focusedKeyX = 0
-var focusedKeyY = 0
-var keyboardVisible = false
-var sendingEvent = false
-
-var tweenPosition
-var tweenSpeed = .2
-=======
+var layout_keys = {}
+var focus_keys = null
 var capslock_keys = []
 var uppercase = false
 
+var focused_key_x = 0
+var focused_key_y = 0
+var keyboard_visible = false
+var sending_event = false
+
 var tween_position
 var tween_speed = .2
->>>>>>> main
 
 var hide_position = Vector2()
 
@@ -320,20 +298,12 @@ func _hide_layout(layout):
 	layout.hide()
 
 
-<<<<<<< HEAD
-func _switchLayout(keyData,x,y):
+func _switch_layout(key_data, x, y):
 	yield(get_tree(), "idle_frame")
-	prevPrevLayout = previousLayout
-	previousLayout = currentLayout
-	emit_signal("layoutChanged", keyData.get("layout-name"))
-	
-=======
-func _switch_layout(key_data):
 	prev_prev_layout = previous_layout
 	previous_layout = current_layout
 	layout_changed.emit(key_data.get("layout-name"))
 
->>>>>>> main
 	for layout in layouts:
 		_hide_layout(layout)
 
@@ -346,14 +316,9 @@ func _switch_layout(key_data):
 		if layout.get_meta("layout_name") == key_data.get("layout-name"):
 			_show_layout(layout)
 			return
-<<<<<<< HEAD
-	
-	_setCapsLock(false)
-=======
 
 	_set_caps_lock(false)
 
->>>>>>> main
 
 ###########################
 ## KEY EVENTS
@@ -373,11 +338,7 @@ func _set_caps_lock(value: bool):
 		key.change_uppercase(value)
 
 
-<<<<<<< HEAD
-func _triggerUppercase(keyData,x,y):
-=======
-func _trigger_uppercase(key_data):
->>>>>>> main
+func _trigger_uppercase(key_data, x, y):
 	uppercase = !uppercase
 	_set_caps_lock(uppercase)
 

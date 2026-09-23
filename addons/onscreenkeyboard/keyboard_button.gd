@@ -42,25 +42,12 @@ func _draw():
 	text_ofs.y += font.get_ascent();
 	font.draw(get_canvas_item(), text_ofs, text)
 
-<<<<<<< HEAD
-func item_rect_changed():
-	if iconTexRect != null:
-		iconTexRect.rect_size = rect_size
-
-func _init(_keyData):
-	keyData = _keyData
-	connect("button_up",self,"button_up")
-	connect("button_down",self,"button_down")
-	connect("item_rect_changed",self,"item_rect_changed")
-	
-=======
 func _init(_key_data):
 	key_data = _key_data
 	button_down.connect(_on_button_down)
 	button_up.connect(_on_button_up)
 	item_rect_changed.connect(_on_item_rect_changed)
 
->>>>>>> main
 	size_flags_horizontal = SIZE_EXPAND_FILL
 	size_flags_vertical = SIZE_EXPAND_FILL
 
@@ -101,17 +88,9 @@ func _on_item_rect_changed():
 
 
 func _on_button_up():
-	released.emit(key_data)
+	released.emit(key_data, id_x, id_y)
 	release_focus()
 
 
-<<<<<<< HEAD
-func button_up():
-	emit_signal("released",keyData,id_x,id_y)
-	
-func button_down():
-	emit_signal("down",keyData,id_x,id_y)
-=======
 func _on_button_down():
-	down.emit(key_data)
->>>>>>> main
+	down.emit(key_data, id_x, id_y)
