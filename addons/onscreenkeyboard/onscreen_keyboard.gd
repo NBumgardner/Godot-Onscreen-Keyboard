@@ -157,28 +157,7 @@ func _update_auto_display_on_input(event):
 		released = !released
 		if released == false:
 			return
-<<<<<<< HEAD
-		
-		if focusObject != null:
-			var clickOnInput = Rect2(focusObject.rect_global_position,focusObject.rect_size).has_point(get_global_mouse_position())
-			var clickOnKeyboard = Rect2(rect_global_position,rect_size).has_point(get_global_mouse_position())
-			
-			if clickOnInput:
-				if isKeyboardFocusObject(focusObject):
-					_showKeyboard()
-			elif not clickOnKeyboard:
-				_hideKeyboard()
 
-func _hideKeyboard(keyData=null,x=null,y=null):
-	tweenPosition.interpolate_property(self,"rect_position",rect_position, Vector2(rect_position.x,get_viewport().get_visible_rect().size.y + 10), tweenSpeed, Tween.TRANS_SINE, Tween.EASE_OUT)
-	tweenPosition.start()
-	
-	_setCapsLock(false)
-	keyboardVisible = false
-	emit_signal("visibilityChanged",keyboardVisible)
-=======
-
-		var focus_object = get_viewport().gui_get_focus_owner()
 		if focus_object != null:
 			var click_on_input = Rect2(focus_object.global_position, focus_object.size).has_point(get_global_mouse_position())
 			var click_on_keyboard = Rect2(global_position, size).has_point(get_global_mouse_position())
@@ -186,18 +165,8 @@ func _hideKeyboard(keyData=null,x=null,y=null):
 			if click_on_input:
 				if is_keyboard_focus_object(focus_object):
 					_show_keyboard()
-			elif click_on_keyboard:
-				_show_keyboard()
-			else:
+			elif not click_on_keyboard:
 				_hide_keyboard()
-
-	if event is InputEventKey:
-		var focus_object = get_viewport().gui_get_focus_owner()
-		if focus_object != null:
-			if event.keycode == KEY_ENTER:
-				if is_keyboard_focus_object_complete_on_enter(focus_object):
-					focus_object.release_focus()
-					_hide_keyboard()
 
 
 func _hide_keyboard(key_data=null, x=null, y=null):
@@ -214,7 +183,6 @@ func _show_keyboard(key_data=null, x=null, y=null):
 		var new_y_pos = get_viewport().get_visible_rect().size.y - size.y
 		animate_position(Vector2(position.x, new_y_pos))
 
->>>>>>> main
 
 func animate_position(new_position, trigger_visibility:bool=false):
 	var tween = get_tree().create_tween()
@@ -260,7 +228,9 @@ func change_visibility(value):
 	else:
 		_set_caps_lock(false)
 		super.hide()
-	visibility_changed.emit()
+
+	keyboard_visible = value
+	visibility_changed.emit(keyboard_visible)
 
 >>>>>>> main
 
