@@ -237,24 +237,18 @@ func set_active_layout_by_name(name):
 		else:
 			_hide_layout(layout)
 
-<<<<<<< HEAD
-func _showLayout(layout):
-	layout.show()
-	currentLayout = layout
-	# Old key, unfocus
-	var key = focusKeys[focusedKeyY][focusedKeyX]
-	key.focused = false
-	focusKeys = layoutKeys[layout]
-	# Focus new key on different layout
-	focusedKeyX = 0
-	focusedKeyY = 0
-	focusKeys[focusedKeyY][focusedKeyX].focused = true
-=======
 
 func _show_layout(layout):
 	layout.show()
 	current_layout = layout
->>>>>>> main
+	# Old key, unfocus
+	var key = focus_keys[focused_key_y][focused_key_x]
+	key.focused = false
+	focus_keys = layout_keys[layout]
+	# Focus new key on different layout
+	focused_key_x = 0
+	focused_key_y = 0
+	focus_keys[focused_key_y][focused_key_x].focused = true
 
 
 func _hide_layout(layout):
