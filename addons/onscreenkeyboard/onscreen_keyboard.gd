@@ -87,7 +87,7 @@ func _input(event):
 		if not sendingEvent:
 			if event is InputEventKey or event is InputEventJoypadButton or event is InputEventJoypadMotion:
 				get_tree().set_input_as_handled()
-				_handleKeyEvents(event)
+				_handle_key_events(event)
 		elif event is InputEventKey and event.scancode == KEY_ENTER and isKeyboardFocusObject(focusObject):
 			_hideKeyboard()
 
@@ -194,17 +194,7 @@ func animate_position(new_position, trigger_visibility:bool=false):
 		tween_speed
 	).set_trans(Tween.TRANS_SINE)
 
-<<<<<<< HEAD
-func _showKeyboard(keyData=null,x=null,y=null):
-	tweenPosition.interpolate_property(self,"rect_position",rect_position, Vector2(rect_position.x,get_viewport().get_visible_rect().size.y-rect_size.y), tweenSpeed, Tween.TRANS_SINE, Tween.EASE_OUT)
-	tweenPosition.start()
-	focusObject = get_focus_owner()
-	focusKey(0,0)
-	keyboardVisible = true
-	emit_signal("visibilityChanged",keyboardVisible)
-
-
-func _handleKeyEvents(event):
+func _handle_key_events(event):
 	# Selection
 	if event.is_action_pressed("ui_left"):
 		focusKey(focusedKeyX - 1, focusedKeyY)
@@ -220,7 +210,6 @@ func _handleKeyEvents(event):
 		focusKeys[focusedKeyY][focusedKeyX].pressing = false
 	elif event.is_action_pressed("ui_cancel"):
 		_hideKeyboard()
-=======
 
 func change_visibility(value):
 	if value:
@@ -232,7 +221,6 @@ func change_visibility(value):
 	keyboard_visible = value
 	visibility_changed.emit(keyboard_visible)
 
->>>>>>> main
 
 ###########################
 ##  KEY LAYOUT
