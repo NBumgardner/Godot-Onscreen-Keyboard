@@ -204,13 +204,23 @@
 						},
 						{
 							"type": "char",
-							"output": ",",
-							"display": ","
+							"output": "-",
+							"display": "-"
+						},
+						{
+							"type": "char",
+							"output": "_",
+							"display": "_"
 						},
 						{
 							"type": "char",
 							"output": "Space",
-							"stretch-ratio": 5
+							"stretch-ratio": 4
+						},
+						{
+							"type": "char",
+							"output": "@",
+							"display": "@"
 						},
 						{
 							"type": "char",
