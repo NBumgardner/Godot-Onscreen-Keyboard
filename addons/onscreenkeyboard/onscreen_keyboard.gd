@@ -1,46 +1,93 @@
-tool
+@tool
 extends PanelContainer
 
+<<<<<<< HEAD
 enum Direction {
 	UP,
 	DOWN
 }
 
+=======
+>>>>>>> main
 ###########################
 ## SETTINGS
 ###########################
 
-export (bool) var autoShow = true
-export (String, FILE, "*.json") var customLayoutFile = null
-export (StyleBoxFlat) var styleBackground = null
-export (StyleBoxFlat) var styleHover = null
-export (StyleBoxFlat) var stylePressed = null
-export (StyleBoxFlat) var styleNormal = null
-export (StyleBoxFlat) var styleSpecialKeys = null
-export (DynamicFont) var font = null
-export (Color) var fontColor = Color(1,1,1)
-export (Color) var fontColorHover = Color(1,1,1)
-export (Color) var fontColorPressed = Color(1,1,1)
+@export var auto_show:bool = true
+@export var animate:bool = true
+
+@export_file var custom_layout_file
+@export var set_tool_tip := true
+@export_group("Style")
+@export var separation:Vector2i = Vector2i(0,0)
+var style_background:StyleBoxFlat = null
+@export var background:StyleBoxFlat = null:
+	set(new_val):
+		style_background = new_val
+		background = new_val
+	get:
+		return style_background
+var style_normal:StyleBoxFlat = null
+@export var normal:StyleBoxFlat = null:
+	set(new_val):
+		style_normal = new_val
+		normal = new_val
+	get:
+		return style_normal
+var style_hover:StyleBoxFlat = null
+@export var hover:StyleBoxFlat = null:
+	set(new_val):
+		style_hover = new_val
+		hover = new_val
+	get:
+		return style_hover
+var style_pressed:StyleBoxFlat = null
+@export var pressed:StyleBoxFlat = null:
+	set(new_val):
+		style_pressed = new_val
+		pressed = new_val
+	get:
+		return style_pressed
+var style_special_keys:StyleBoxFlat = null
+@export var special_keys:StyleBoxFlat = null:
+	set(new_val):
+		style_special_keys = new_val
+		special_keys = new_val
+	get:
+		return style_special_keys
+@export_group("Font")
+@export var font:FontFile
+@export var font_size:int = 20
+@export var font_color_normal:Color = Color(1,1,1)
+@export var font_color_hover:Color = Color(1,1,1)
+@export var font_color_pressed:Color = Color(1,1,1)
 
 ###########################
 ## SIGNALS
 ###########################
 
-signal visibilityChanged
-signal layoutChanged
+signal layout_changed
 
 ###########################
 ## PANEL 
 ###########################
 
 func _enter_tree():
-	get_tree().get_root().connect("size_changed", self, "size_changed")
-	_initKeyboard()
+	if not get_tree().get_root().size_changed.is_connected(size_changed):
+		get_tree().get_root().size_changed.connect(size_changed)
+	_init_keyboard()
 
+<<<<<<< HEAD
+=======
+#func _exit_tree():
+#    pass
+
+>>>>>>> main
 #func _process(delta):
-#	pass
+#    pass
 
 func _input(event):
+<<<<<<< HEAD
 	_updateAutoDisplayOnInput(event)
 	if keyboardVisible:
 		if not sendingEvent:
@@ -49,10 +96,14 @@ func _input(event):
 				_handleKeyEvents(event)
 		elif event is InputEventKey and event.scancode == KEY_ENTER and isKeyboardFocusObject(focusObject):
 			_hideKeyboard()
+=======
+	_update_auto_display_on_input(event)
+
+>>>>>>> main
 
 func size_changed():
-	if autoShow:
-		_hideKeyboard()
+	if auto_show and visible:
+		_hide_keyboard()
 
 ###########################
 ## INIT
@@ -62,6 +113,7 @@ var KeyListHandler
 
 var layouts = []
 var keys = []
+<<<<<<< HEAD
 var layoutKeys = {}
 var focusKeys = null
 var capslockKeys = []
@@ -74,43 +126,55 @@ var sendingEvent = false
 
 var tweenPosition
 var tweenSpeed = .2
+=======
+var capslock_keys = []
+var uppercase = false
 
-func _initKeyboard():
+var tween_position
+var tween_speed = .2
+>>>>>>> main
 
-	if customLayoutFile == null:
-		var defaultLayout = preload("default_layout.gd").new()
-		_createKeyboard(defaultLayout.data)
+var hide_position = Vector2()
+
+func _init_keyboard():
+	if custom_layout_file == null:
+		var default_layout = preload("default_layout.gd").new()
+		_create_keyboard(default_layout.data)
 	else:
-		_createKeyboard(_loadJSON(customLayoutFile))
-	
-	tweenPosition = Tween.new()
-	add_child(tweenPosition)
-	
-	if autoShow:
-		_hideKeyboard()
+		_create_keyboard(_load_json(custom_layout_file))
+
+	# init positioning without animation
+	var tmp_anim = animate
+	animate = false
+	if visible:
+		_hide_keyboard()
+	elif visible:
+		_show_keyboard()
+	animate = tmp_anim
 
 
 ###########################
 ## HIDE/SHOW
 ###########################
 
-var focusObject = null
+var focus_object = null
 
 func show():
-	_showKeyboard()
-	
+	_show_keyboard()
+
 func hide():
-	_hideKeyboard()
+	_hide_keyboard()
 
 var released = true
-func _updateAutoDisplayOnInput(event):
-	if autoShow == false:
+func _update_auto_display_on_input(event):
+	if auto_show == false:
 		return
-	
+
 	if event is InputEventMouseButton:
 		released = !released
 		if released == false:
 			return
+<<<<<<< HEAD
 		
 		if focusObject != null:
 			var clickOnInput = Rect2(focusObject.rect_global_position,focusObject.rect_size).has_point(get_global_mouse_position())
@@ -129,8 +193,57 @@ func _hideKeyboard(keyData=null,x=null,y=null):
 	_setCapsLock(false)
 	keyboardVisible = false
 	emit_signal("visibilityChanged",keyboardVisible)
+=======
+
+		var focus_object = get_viewport().gui_get_focus_owner()
+		if focus_object != null:
+			var click_on_input = Rect2(focus_object.global_position, focus_object.size).has_point(get_global_mouse_position())
+			var click_on_keyboard = Rect2(global_position, size).has_point(get_global_mouse_position())
+
+			if click_on_input:
+				if is_keyboard_focus_object(focus_object):
+					_show_keyboard()
+			elif click_on_keyboard:
+				_show_keyboard()
+			else:
+				_hide_keyboard()
+
+	if event is InputEventKey:
+		var focus_object = get_viewport().gui_get_focus_owner()
+		if focus_object != null:
+			if event.keycode == KEY_ENTER:
+				if is_keyboard_focus_object_complete_on_enter(focus_object):
+					focus_object.release_focus()
+					_hide_keyboard()
 
 
+func _hide_keyboard(key_data=null):
+	if animate:
+		var new_y_pos = get_viewport().get_visible_rect().size.y + 10
+		animate_position(Vector2(position.x, new_y_pos), true)
+	else:
+		change_visibility(false)
+
+
+func _show_keyboard(key_data=null):
+	change_visibility(true)
+	if animate:
+		var new_y_pos = get_viewport().get_visible_rect().size.y - size.y
+		animate_position(Vector2(position.x, new_y_pos))
+
+>>>>>>> main
+
+func animate_position(new_position, trigger_visibility:bool=false):
+	var tween = get_tree().create_tween()
+	if trigger_visibility:
+		tween.finished.connect(change_visibility.bind(!visible))
+	tween.tween_property(
+		self,"position",
+		Vector2(new_position),
+		tween_speed
+	).set_trans(Tween.TRANS_SINE)
+
+<<<<<<< HEAD
 func _showKeyboard(keyData=null,x=null,y=null):
 	tweenPosition.interpolate_property(self,"rect_position",rect_position, Vector2(rect_position.x,get_viewport().get_visible_rect().size.y-rect_size.y), tweenSpeed, Tween.TRANS_SINE, Tween.EASE_OUT)
 	tweenPosition.start()
@@ -156,22 +269,34 @@ func _handleKeyEvents(event):
 		focusKeys[focusedKeyY][focusedKeyX].pressing = false
 	elif event.is_action_pressed("ui_cancel"):
 		_hideKeyboard()
+=======
+
+func change_visibility(value):
+	if value:
+		super.show()
+	else:
+		_set_caps_lock(false)
+		super.hide()
+	visibility_changed.emit()
+
+>>>>>>> main
 
 ###########################
 ##  KEY LAYOUT
 ###########################
 
-var prevPrevLayout = null
-var previousLayout = null
-var currentLayout = null
+var prev_prev_layout = null
+var previous_layout = null
+var current_layout = null
 
-func setActiveLayoutByName(name):
+func set_active_layout_by_name(name):
 	for layout in layouts:
-		if layout.hint_tooltip == str(name):
-			_showLayout(layout)
+		if layout.get_meta("layout_name") == str(name):
+			_show_layout(layout)
 		else:
-			_hideLayout(layout)
+			_hide_layout(layout)
 
+<<<<<<< HEAD
 func _showLayout(layout):
 	layout.show()
 	currentLayout = layout
@@ -183,56 +308,85 @@ func _showLayout(layout):
 	focusedKeyX = 0
 	focusedKeyY = 0
 	focusKeys[focusedKeyY][focusedKeyX].focused = true
+=======
+
+func _show_layout(layout):
+	layout.show()
+	current_layout = layout
+>>>>>>> main
 
 
-func _hideLayout(layout):
+func _hide_layout(layout):
 	layout.hide()
 
 
+<<<<<<< HEAD
 func _switchLayout(keyData,x,y):
 	yield(get_tree(), "idle_frame")
 	prevPrevLayout = previousLayout
 	previousLayout = currentLayout
 	emit_signal("layoutChanged", keyData.get("layout-name"))
 	
+=======
+func _switch_layout(key_data):
+	prev_prev_layout = previous_layout
+	previous_layout = current_layout
+	layout_changed.emit(key_data.get("layout-name"))
+
+>>>>>>> main
 	for layout in layouts:
-		_hideLayout(layout)
-	
-	if keyData.get("layout-name") == "PREVIOUS-LAYOUT":
-		if prevPrevLayout != null:
-			_showLayout(prevPrevLayout)
+		_hide_layout(layout)
+
+	if key_data.get("layout-name") == "PREVIOUS-LAYOUT":
+		if prev_prev_layout != null:
+			_show_layout(prev_prev_layout)
 			return
-	
+
 	for layout in layouts:
-		if layout.hint_tooltip == keyData.get("layout-name"):
-			_showLayout(layout)
+		if layout.get_meta("layout_name") == key_data.get("layout-name"):
+			_show_layout(layout)
 			return
+<<<<<<< HEAD
 	
 	_setCapsLock(false)
+=======
+
+	_set_caps_lock(false)
+
+>>>>>>> main
 
 ###########################
 ## KEY EVENTS
 ###########################
 
-func _setCapsLock(value):
+func _set_caps_lock(value: bool):
 	uppercase = value
-	for key in capslockKeys:
+	for key in capslock_keys:
 		if value:
 			if key.get_draw_mode() != BaseButton.DRAW_PRESSED:
-				key.pressed = !key.pressed
+				key.button_pressed = !key.button_pressed
 		else:
 			if key.get_draw_mode() == BaseButton.DRAW_PRESSED:
-				key.pressed = !key.pressed
-				
+				key.button_pressed = !key.button_pressed
+
 	for key in keys:
-		key.changeUppercase(value)
+		key.change_uppercase(value)
 
 
+<<<<<<< HEAD
 func _triggerUppercase(keyData,x,y):
+=======
+func _trigger_uppercase(key_data):
+>>>>>>> main
 	uppercase = !uppercase
-	_setCapsLock(uppercase)
+	_set_caps_lock(uppercase)
 
 
+func _key_released(key_data):
+	if key_data.has("output"):
+		var key_value = key_data.get("output")
+
+<<<<<<< HEAD
 func _keyDown(keyData,x,y):
 	focusKey(x,y)
 
@@ -263,52 +417,76 @@ func _keyReleased(keyData,x,y):
 		yield(get_tree(), "idle_frame")
 		sendingEvent = false
 		
+=======
+		###########################
+		## DISPATCH InputEvent 
+		###########################
+
+		var input_event_key = InputEventKey.new()
+		input_event_key.shift_pressed = uppercase
+		input_event_key.alt_pressed = false
+		input_event_key.meta_pressed = false
+		input_event_key.ctrl_pressed = false
+		input_event_key.pressed = true
+
+		var key = KeyListHandler.get_key_from_string(key_value)
+		if !uppercase && KeyListHandler.has_lowercase(key_value):
+			key +=32
+
+		input_event_key.keycode = key
+		input_event_key.unicode = key
+
+		Input.parse_input_event(input_event_key)
+
+>>>>>>> main
 		###########################
 		## DISABLE CAPSLOCK AFTER 
 		###########################
-		_setCapsLock(false)
+		_set_caps_lock(false)
 
 
 ###########################
 ## CONSTRUCT KEYBOARD
 ###########################
 
-func _setKeyStyle(styleName, key, style):
+func _set_key_style(style_name:String, key: Control, style:StyleBoxFlat):
 	if style != null:
-		key.set('custom_styles/'+styleName, style)
+		key.add_theme_stylebox_override(style_name, style)
 
-func _createKeyboard(layoutData):
-	if layoutData == null:
+
+func _create_keyboard(layout_data):
+	if layout_data == null:
 		print("ERROR. No layout file found")
 		return
-	
+
 	KeyListHandler = preload("keylist.gd").new()
 	KeyboardButton = preload("keyboard_button.gd")
-	
+
 	var ICON_DELETE = preload("icons/delete.png")
 	var ICON_SHIFT = preload("icons/shift.png")
 	var ICON_LEFT = preload("icons/left.png")
 	var ICON_RIGHT = preload("icons/right.png")
 	var ICON_HIDE = preload("icons/hide.png")
 	var ICON_ENTER = preload("icons/enter.png")
-	
-	var data = layoutData
-	
-	if styleBackground != null:
-		set('custom_styles/panel', styleBackground)
-	
+
+	var data = layout_data
+
+	if style_background != null:
+		add_theme_stylebox_override('panel', style_background)
+
 	var index = 0
 	for layout in data.get("layouts"):
 
-		var layoutContainer = PanelContainer.new()
-		
-		if styleBackground != null:
-			layoutContainer.set('custom_styles/panel', styleBackground)
-		
+		var layout_container = PanelContainer.new()
+
+		if style_background != null:
+			layout_container.add_theme_stylebox_override('panel', style_background)
+
 		# SHOW FIRST LAYOUT ON DEFAULT
 		if index > 0:
-			layoutContainer.hide()
+			layout_container.hide()
 		else:
+<<<<<<< HEAD
 			currentLayout = layoutContainer
 		
 		layoutContainer.hint_tooltip = layout.get("name")
@@ -323,16 +501,34 @@ func _createKeyboard(layoutData):
 		layoutKeys[layoutContainer] = loopLayoutKeys
 		if focusKeys == null:
 			focusKeys = layoutKeys[layoutContainer]
+=======
+			current_layout = layout_container
+
+		var layout_name = layout.get("name")
+		layout_container.set_meta("layout_name", layout_name)
+		if set_tool_tip:
+			layout_container.tooltip_text = layout_name
+		layouts.push_back(layout_container)
+		add_child(layout_container)
+
+		var base_vbox = VBoxContainer.new()
+		base_vbox.size_flags_horizontal = SIZE_EXPAND_FILL
+		base_vbox.size_flags_vertical = SIZE_EXPAND_FILL
+		# theme override for spacing
+		base_vbox.add_theme_constant_override("separation", separation.y)
+>>>>>>> main
 
 		for row in layout.get("rows"):
 			var focusRowKeys = []
 			loopLayoutKeys.push_back(focusRowKeys)
 
-			var keyRow = HBoxContainer.new()
-			keyRow.size_flags_horizontal = SIZE_EXPAND_FILL
-			keyRow.size_flags_vertical = SIZE_EXPAND_FILL
-			
+			var key_row = HBoxContainer.new()
+			key_row.size_flags_horizontal = SIZE_EXPAND_FILL
+			key_row.size_flags_vertical = SIZE_EXPAND_FILL
+			key_row.add_theme_constant_override("separation", separation.x)
+
 			for key in row.get("keys"):
+<<<<<<< HEAD
 				var newKey = KeyboardButton.new(key)
 				newKey.id_x = focusRowKeys.size()
 				newKey.id_y = loopLayoutKeys.size()-1
@@ -353,53 +549,71 @@ func _createKeyboard(layoutData):
 				newKey.connect("down",self,"_keyDown")
 				newKey.connect("released",self,"_keyReleased")
 				
+=======
+				var new_key = KeyboardButton.new(key)
+
+				_set_key_style("normal",new_key, style_normal)
+				_set_key_style("hover",new_key, style_hover)
+				_set_key_style("pressed",new_key, style_pressed)
+
+				new_key.set('theme_override_font_sizes/font_size', font_size)
+				if font != null:
+					new_key.set('theme_override_fonts/font', font)
+				if font_color_normal != null:
+					new_key.set('theme_override_colors/font_color', font_color_normal)
+					new_key.set('theme_override_colors/font_hover_color', font_color_hover)
+					new_key.set('theme_override_colors/font_pressed_color', font_color_pressed)
+					new_key.set('theme_override_colors/font_disabled_color', font_color_normal)
+
+				new_key.released.connect(_key_released)
+
+>>>>>>> main
 				if key.has("type"):
 					if key.get("type") == "switch-layout":
-						newKey.connect("released",self,"_switchLayout")
-						_setKeyStyle("normal",newKey, styleSpecialKeys)
+						new_key.released.connect(_switch_layout)
+						_set_key_style("normal",new_key, style_special_keys)
 					elif key.get("type") == "special":
-						_setKeyStyle("normal",newKey, styleSpecialKeys)
+						_set_key_style("normal",new_key, style_special_keys)
 					elif key.get("type") == "special-shift":
-						newKey.connect("released",self,"_triggerUppercase")
-						newKey.toggle_mode = true
-						capslockKeys.push_back(newKey)
-						_setKeyStyle("normal",newKey, styleSpecialKeys)
+						new_key.released.connect(_trigger_uppercase)
+						new_key.toggle_mode = true
+						capslock_keys.push_back(new_key)
+						_set_key_style("normal",new_key, style_special_keys)
 					elif key.get("type") == "special-hide-keyboard":
-						newKey.connect("released",self,"_hideKeyboard")
-						_setKeyStyle("normal",newKey, styleSpecialKeys)
-				
+						new_key.released.connect(_hide_keyboard)
+						_set_key_style("normal",new_key, style_special_keys)
+
 				# SET ICONS
 				if key.has("display-icon"):
-					var iconData = str(key.get("display-icon")).split(":")
+					var icon_data = str(key.get("display-icon")).split(":")
 					# PREDEFINED
-					if str(iconData[0])=="PREDEFINED":
-						if str(iconData[1])=="DELETE":
-							newKey.setIcon(ICON_DELETE)
-						elif str(iconData[1])=="SHIFT":
-							newKey.setIcon(ICON_SHIFT)
-						elif str(iconData[1])=="LEFT":
-							newKey.setIcon(ICON_LEFT)
-						elif str(iconData[1])=="RIGHT":
-							newKey.setIcon(ICON_RIGHT)
-						elif str(iconData[1])=="HIDE":
-							newKey.setIcon(ICON_HIDE)
-						elif str(iconData[1])=="ENTER":
-							newKey.setIcon(ICON_ENTER)
+					if str(icon_data[0])=="PREDEFINED":
+						if str(icon_data[1])=="DELETE":
+							new_key.set_icon(ICON_DELETE)
+						elif str(icon_data[1])=="SHIFT":
+							new_key.set_icon(ICON_SHIFT)
+						elif str(icon_data[1])=="LEFT":
+							new_key.set_icon(ICON_LEFT)
+						elif str(icon_data[1])=="RIGHT":
+							new_key.set_icon(ICON_RIGHT)
+						elif str(icon_data[1])=="HIDE":
+							new_key.set_icon(ICON_HIDE)
+						elif str(icon_data[1])=="ENTER":
+							new_key.set_icon(ICON_ENTER)
 					# CUSTOM
-					if str(iconData[0])=="res":
-						print(key.get("display-icon"))
+					if str(icon_data[0])=="res":
 						var texture = load(key.get("display-icon"))
-						newKey.setIcon(texture)
-						
-					if fontColor != null:
-						newKey.setIconColor(fontColor)
-				
-				keyRow.add_child(newKey)
-				keys.push_back(newKey)
-				
-			baseVbox.add_child(keyRow)
-		
-		layoutContainer.add_child(baseVbox)
+						new_key.set_icon(texture)
+
+					if font_color_normal != null:
+						new_key.set_icon_color(font_color_normal)
+
+				key_row.add_child(new_key)
+				keys.push_back(new_key)
+
+			base_vbox.add_child(key_row)
+
+		layout_container.add_child(base_vbox)
 		index+=1
 	
 
@@ -407,23 +621,27 @@ func _createKeyboard(layoutData):
 ## LOAD SETTINGS
 ###########################
 
-func _loadJSON(filePath):
-	var content = JSON.parse(_loadFile(filePath))
-	
-	if content.error == OK:
-		return content.result
+func _load_json(file_path) -> Variant:
+	var json = JSON.new()
+	var json_string = _load_file(file_path)
+	var error = json.parse(json_string)
+	if error == OK:
+		var data_received = json.data
+		#        print(data_received)
+		if typeof(data_received) == TYPE_DICTIONARY:
+			return data_received
+		else:
+			return {"msg": "unexpected data => expected DICTIONARY"}
 	else:
-		print("!JSON PARSE ERROR!")
-		return null
+		print("JSON Parse Error: ", json.get_error_message(), " in ", json_string, " at line ", json.get_error_line())
+		return {"msg":json.get_error_message()}
 
 
-func _loadFile(filePath):
-	var file = File.new()
-	var error = file.open(filePath, file.READ)
-	
-	if error != 0:
-		print("Error loading File. Error: "+str(error))
-	
+func _load_file(file_path):
+	var file = FileAccess.open(file_path, FileAccess.READ)
+	if not file:
+		print("Error loading File. Error: ")
+
 	var content = file.get_as_text()
 	file.close()
 	return content
@@ -433,15 +651,16 @@ func _loadFile(filePath):
 ## HELPER
 ###########################
 
-func isKeyboardFocusObjectCompleteOnEnter(focusObject):
-	if focusObject.get_class() == "LineEdit":
+func is_keyboard_focus_object_complete_on_enter(focus_object):
+	if focus_object is LineEdit:
 		return true
 	return false
 
-func isKeyboardFocusObject(focusObject):
-	if focusObject.get_class() == "LineEdit" or focusObject.get_class() == "TextEdit":
+func is_keyboard_focus_object(focus_object):
+	if focus_object is LineEdit or focus_object is TextEdit:
 		return true
 	return false
+<<<<<<< HEAD
 
 func focusKey(x, y):
 	# Unfocus previous key
@@ -481,3 +700,5 @@ func focusKeyDir(dir):
 			(left_pos <= center.x and center.x <= right_pos):
 			focusKey(key.id_x, key.id_y)
 			return
+=======
+>>>>>>> main
