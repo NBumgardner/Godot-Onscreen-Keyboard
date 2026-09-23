@@ -74,11 +74,15 @@ func _enter_tree():
 		get_tree().get_root().size_changed.connect(size_changed)
 	_init_keyboard()
 
+#func _exit_tree():
+#    pass
+
 #func _process(delta):
 #    pass
 
 func _input(event):
 	_update_auto_display_on_input(event)
+
 	if keyboardVisible:
 		if not sendingEvent:
 			if event is InputEventKey or event is InputEventJoypadButton or event is InputEventJoypadMotion:
@@ -90,6 +94,7 @@ func _input(event):
 func size_changed():
 	if auto_show and visible:
 		_hide_keyboard()
+
 
 ###########################
 ## INIT
@@ -576,7 +581,7 @@ func _create_keyboard(layout_data):
 
 		layout_container.add_child(base_vbox)
 		index+=1
-	
+
 
 ###########################
 ## LOAD SETTINGS
