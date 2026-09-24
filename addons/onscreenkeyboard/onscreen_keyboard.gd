@@ -578,7 +578,6 @@ func is_keyboard_focus_object(focus_object):
 	if focus_object is LineEdit or focus_object is TextEdit:
 		return true
 	return false
-<<<<<<< HEAD
 
 func focusKey(x, y):
 	# Unfocus previous key
@@ -618,5 +617,3 @@ func focusKeyDir(dir):
 			(left_pos <= center.x and center.x <= right_pos):
 			focusKey(key.id_x, key.id_y)
 			return
-=======
->>>>>>> main
