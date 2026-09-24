@@ -383,22 +383,6 @@ func _create_keyboard(layout_data):
 		if index > 0:
 			layout_container.hide()
 		else:
-<<<<<<< HEAD
-			currentLayout = layoutContainer
-		
-		layoutContainer.hint_tooltip = layout.get("name")
-		layouts.push_back(layoutContainer)
-		add_child(layoutContainer)
-		
-		var baseVbox = VBoxContainer.new()
-		baseVbox.size_flags_horizontal = SIZE_EXPAND_FILL
-		baseVbox.size_flags_vertical = SIZE_EXPAND_FILL
-		
-		var loopLayoutKeys = []
-		layoutKeys[layoutContainer] = loopLayoutKeys
-		if focusKeys == null:
-			focusKeys = layoutKeys[layoutContainer]
-=======
 			current_layout = layout_container
 
 		var layout_name = layout.get("name")
@@ -413,11 +397,15 @@ func _create_keyboard(layout_data):
 		base_vbox.size_flags_vertical = SIZE_EXPAND_FILL
 		# theme override for spacing
 		base_vbox.add_theme_constant_override("separation", separation.y)
->>>>>>> main
+
+		var loop_layout_keys = []
+		layoutKeys[layoutContainer] = loop_layout_keys
+		if focusKeys == null:
+			focusKeys = layoutKeys[layoutContainer]
 
 		for row in layout.get("rows"):
-			var focusRowKeys = []
-			loopLayoutKeys.push_back(focusRowKeys)
+			var focus_row_keys = []
+			loop_layout_keys.push_back(focus_row_keys)
 
 			var key_row = HBoxContainer.new()
 			key_row.size_flags_horizontal = SIZE_EXPAND_FILL
@@ -425,29 +413,10 @@ func _create_keyboard(layout_data):
 			key_row.add_theme_constant_override("separation", separation.x)
 
 			for key in row.get("keys"):
-<<<<<<< HEAD
-				var newKey = KeyboardButton.new(key)
-				newKey.id_x = focusRowKeys.size()
-				newKey.id_y = loopLayoutKeys.size()-1
-				focusRowKeys.push_back(newKey)
-				
-				_setKeyStyle("normal",newKey, styleNormal)
-				_setKeyStyle("hover",newKey, styleHover)
-				_setKeyStyle("pressed",newKey, stylePressed)
-					
-				if font != null:
-					newKey.set('custom_fonts/font', font)
-				if fontColor != null:
-					newKey.set('custom_colors/font_color', fontColor)
-					newKey.set('custom_colors/font_color_hover', fontColorHover)
-					newKey.set('custom_colors/font_color_pressed', fontColorPressed)
-					newKey.set('custom_colors/font_color_disabled', fontColor)
-				
-				newKey.connect("down",self,"_keyDown")
-				newKey.connect("released",self,"_keyReleased")
-				
-=======
 				var new_key = KeyboardButton.new(key)
+				newKey.id_x = focus_row_keys.size()
+				newKey.id_y = loop_layout_keys.size()-1
+				focus_row_keys.push_back(newKey)
 
 				_set_key_style("normal",new_key, style_normal)
 				_set_key_style("hover",new_key, style_hover)
@@ -462,9 +431,9 @@ func _create_keyboard(layout_data):
 					new_key.set('theme_override_colors/font_pressed_color', font_color_pressed)
 					new_key.set('theme_override_colors/font_disabled_color', font_color_normal)
 
+				new_key.down.connect(_key_down)
 				new_key.released.connect(_key_released)
 
->>>>>>> main
 				if key.has("type"):
 					if key.get("type") == "switch-layout":
 						new_key.released.connect(_switch_layout)
