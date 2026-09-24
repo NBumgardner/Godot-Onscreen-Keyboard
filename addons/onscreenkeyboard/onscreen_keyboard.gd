@@ -197,17 +197,17 @@ func animate_position(new_position, trigger_visibility:bool=false):
 func _handle_key_events(event):
 	# Selection
 	if event.is_action_pressed("ui_left"):
-		focusKey(focusedKeyX - 1, focusedKeyY)
+		focusKey(focused_key_x - 1, focused_key_y)
 	elif event.is_action_pressed("ui_right"):
-		focusKey(focusedKeyX + 1, focusedKeyY)
+		focusKey(focused_key_x + 1, focused_key_y)
 	elif event.is_action_pressed("ui_up"):
 		focusKeyDir(Direction.UP)
 	elif event.is_action_pressed("ui_down"):
 		focusKeyDir(Direction.DOWN)
 	elif event.is_action_pressed("ui_accept"):
-		focusKeys[focusedKeyY][focusedKeyX].pressing = true
+		focus_keys[focused_key_y][focused_key_x].pressing = true
 	elif event.is_action_released("ui_accept"):
-		focusKeys[focusedKeyY][focusedKeyX].pressing = false
+		focus_keys[focused_key_y][focused_key_x].pressing = false
 	elif event.is_action_pressed("ui_cancel"):
 		_hideKeyboard()
 
@@ -400,8 +400,8 @@ func _create_keyboard(layout_data):
 
 		var loop_layout_keys = []
 		layoutKeys[layoutContainer] = loop_layout_keys
-		if focusKeys == null:
-			focusKeys = layoutKeys[layoutContainer]
+		if focus_keys == null:
+			focus_keys = layoutKeys[layoutContainer]
 
 		for row in layout.get("rows"):
 			var focus_row_keys = []
@@ -529,35 +529,35 @@ func is_keyboard_focus_object(focus_object):
 
 func focusKey(x, y):
 	# Unfocus previous key
-	var key = focusKeys[focusedKeyY][focusedKeyX]
+	var key = focus_keys[focused_key_y][focused_key_x]
 	key.focused = false
-	if x != focusedKeyX or y != focusedKeyY:
+	if x != focused_key_x or y != focused_key_y:
 		key.pressing = false
 	
 	if y < 0:
-		y = focusKeys.size() - 1
-	elif y >= focusKeys.size():
+		y = focus_keys.size() - 1
+	elif y >= focus_keys.size():
 		y = 0
 	if x < 0:
-		x = focusKeys[y].size() - 1
-	elif x >= focusKeys[y].size():
+		x = focus_keys[y].size() - 1
+	elif x >= focus_keys[y].size():
 		x = 0
 
 	# Focus new key
-	focusedKeyX = x
-	focusedKeyY = y
-	focusKeys[focusedKeyY][focusedKeyX].focused = true
+	focused_key_x = x
+	focused_key_y = y
+	focus_keys[focused_key_y][focused_key_x].focused = true
 
 func focusKeyDir(dir):
-	var currKey = focusKeys[focusedKeyY][focusedKeyX]
-	var center = currKey.rect_global_position + currKey.rect_size / 2
+	var curr_key = focus_keys[focused_key_y][focused_key_x]
+	var center = curr_key.rect_global_position + curr_key.rect_size / 2
 	
-	var idx = focusedKeyY + 1 if dir == Direction.DOWN else focusedKeyY - 1
+	var idx = focused_key_y + 1 if dir == Direction.DOWN else focused_key_y - 1
 	if idx == -1:
-		idx = focusKeys.size()-1
-	elif idx == focusKeys.size():
+		idx = focus_keys.size()-1
+	elif idx == focus_keys.size():
 		idx = 0
-	for key in focusKeys[idx]:
+	for key in focus_keys[idx]:
 		var left_pos = key.rect_global_position.x
 		var right_pos = left_pos + key.rect_size.x
 		if (dir == Direction.UP and right_pos > center.x) or \
