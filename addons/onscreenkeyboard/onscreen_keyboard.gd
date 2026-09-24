@@ -83,13 +83,13 @@ func _enter_tree():
 func _input(event):
 	_update_auto_display_on_input(event)
 
-	if keyboardVisible:
-		if not sendingEvent:
+	if keyboard_visible:
+		if not sending_event:
 			if event is InputEventKey or event is InputEventJoypadButton or event is InputEventJoypadMotion:
 				get_tree().set_input_as_handled()
 				_handle_key_events(event)
-		elif event is InputEventKey and event.scancode == KEY_ENTER and isKeyboardFocusObject(focusObject):
-			_hideKeyboard()
+		elif event is InputEventKey and event.scancode == KEY_ENTER and is_keyboard_focus_object(focus_object):
+			_hide_keyboard()
 
 func size_changed():
 	if auto_show and visible:
@@ -209,7 +209,7 @@ func _handle_key_events(event):
 	elif event.is_action_released("ui_accept"):
 		focus_keys[focused_key_y][focused_key_x].pressing = false
 	elif event.is_action_pressed("ui_cancel"):
-		_hideKeyboard()
+		_hide_keyboard()
 
 func change_visibility(value):
 	if value:
@@ -331,10 +331,10 @@ func _keyReleased(key_data,x,y):
 		input_event_key.keycode = key
 		input_event_key.unicode = key
 
-		sendingEvent = true
+		sending_event = true
 		Input.parse_input_event(input_event_key)
 		await get_tree().process_frame
-		sendingEvent = false
+		sending_event = false
 
 		###########################
 		## DISABLE CAPSLOCK AFTER 
@@ -399,9 +399,9 @@ func _create_keyboard(layout_data):
 		base_vbox.add_theme_constant_override("separation", separation.y)
 
 		var loop_layout_keys = []
-		layoutKeys[layoutContainer] = loop_layout_keys
+		layout_keys[layout_container] = loop_layout_keys
 		if focus_keys == null:
-			focus_keys = layoutKeys[layoutContainer]
+			focus_keys = layout_keys[layout_container]
 
 		for row in layout.get("rows"):
 			var focus_row_keys = []
@@ -414,9 +414,9 @@ func _create_keyboard(layout_data):
 
 			for key in row.get("keys"):
 				var new_key = KeyboardButton.new(key)
-				newKey.id_x = focus_row_keys.size()
-				newKey.id_y = loop_layout_keys.size()-1
-				focus_row_keys.push_back(newKey)
+				new_key.id_x = focus_row_keys.size()
+				new_key.id_y = loop_layout_keys.size()-1
+				focus_row_keys.push_back(new_key)
 
 				_set_key_style("normal",new_key, style_normal)
 				_set_key_style("hover",new_key, style_hover)
