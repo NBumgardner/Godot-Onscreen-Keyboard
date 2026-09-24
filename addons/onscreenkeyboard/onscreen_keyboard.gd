@@ -256,7 +256,7 @@ func _hide_layout(layout):
 
 
 func _switch_layout(key_data, x, y):
-	yield(get_tree(), "idle_frame")
+	await get_tree().process_frame
 	prev_prev_layout = previous_layout
 	previous_layout = current_layout
 	layout_changed.emit(key_data.get("layout-name"))
@@ -333,7 +333,7 @@ func _keyReleased(key_data,x,y):
 
 		sendingEvent = true
 		Input.parse_input_event(input_event_key)
-		yield(get_tree(), "idle_frame")
+		await get_tree().process_frame
 		sendingEvent = false
 
 		###########################
