@@ -300,11 +300,6 @@ func _trigger_uppercase(key_data, x, y):
 	_set_caps_lock(uppercase)
 
 
-func _key_released(key_data):
-	if key_data.has("output"):
-		var key_value = key_data.get("output")
-
-
 func _key_down(key_data,x,y):
 	focusKey(x,y)
 
