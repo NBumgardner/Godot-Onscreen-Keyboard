@@ -305,11 +305,11 @@ func _key_released(key_data):
 		var key_value = key_data.get("output")
 
 
-func _keyDown(key_data,x,y):
+func _key_down(key_data,x,y):
 	focusKey(x,y)
 
 
-func _keyReleased(key_data,x,y):
+func _key_released(key_data,x,y):
 	if key_data.has("output"):
 		var key_value = key_data.get("output")
 
