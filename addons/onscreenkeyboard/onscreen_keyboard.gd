@@ -304,38 +304,15 @@ func _key_released(key_data):
 	if key_data.has("output"):
 		var key_value = key_data.get("output")
 
-<<<<<<< HEAD
-func _keyDown(keyData,x,y):
+
+func _keyDown(key_data,x,y):
 	focusKey(x,y)
 
-func _keyReleased(keyData,x,y):
-	
-	if keyData.has("output"):
-		var keyValue = keyData.get("output")
-		
-		###########################
-		## DISPATCH InputEvent 
-		###########################
-		
-		var inputEventKey = InputEventKey.new()
-		inputEventKey.shift = uppercase
-		inputEventKey.alt = false
-		inputEventKey.meta = false
-		inputEventKey.command = false
-		inputEventKey.pressed = true
-		
-		var keyUnicode = KeyListHandler.getUnicodeFromString(keyValue)
-		if uppercase==false and KeyListHandler.hasLowercase(keyValue):
-			keyUnicode +=32
-		inputEventKey.unicode = keyUnicode
-		inputEventKey.scancode = KeyListHandler.getScancodeFromString(keyValue)
 
-		sendingEvent = true
-		Input.parse_input_event(inputEventKey)
-		yield(get_tree(), "idle_frame")
-		sendingEvent = false
-		
-=======
+func _keyReleased(key_data,x,y):
+	if key_data.has("output"):
+		var key_value = key_data.get("output")
+
 		###########################
 		## DISPATCH InputEvent 
 		###########################
@@ -354,9 +331,11 @@ func _keyReleased(keyData,x,y):
 		input_event_key.keycode = key
 		input_event_key.unicode = key
 
+		sendingEvent = true
 		Input.parse_input_event(input_event_key)
+		yield(get_tree(), "idle_frame")
+		sendingEvent = false
 
->>>>>>> main
 		###########################
 		## DISABLE CAPSLOCK AFTER 
 		###########################
